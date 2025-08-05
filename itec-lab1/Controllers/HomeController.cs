@@ -18,7 +18,7 @@ namespace itec_lab1.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult Config()
         {
             return View();
         }
