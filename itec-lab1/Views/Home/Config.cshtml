@@ -19,10 +19,7 @@
 
     <table class="table table-bordered" id="configTable">
         <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-            </tr>
+            <tr></tr>
         </thead>
         <tbody></tbody>
     </table>
@@ -45,13 +42,30 @@
             success: function (data) {
                 console.log(data);
                 const tbody = $('#configTable tbody');
+                const thcolumn = $('#configTable thead tr');
+                const tdrow = $('#configTable tbody tr');
                 tbody.empty();
-                
+                const propertyNames = Object.keys(data[0]);
+
                 if (data.length === 0) {
                     tbody.append('<tr><td colspan="2">No data found.</td></tr>');
                 } else {
+                    $.each(propertyNames, function (i, propertyName) {
+                        thcolumn.append(`<th>${propertyName}</th>`);
+                    });
+
+                    let body = ""
+
                     $.each(data, function (i, obj) {
-                        tbody.append(`<tr><td>${obj.id}</td><td>${obj.name}</td></tr>`);
+                        // tbody.append(`<tr><td>${obj.id}</td><td>${obj.name}</td></tr>`);
+                        let row = "<tr>"
+
+                        $.each(data[i], function (key, value) {
+                            row = row + `<td>${value}</td>`
+                        });
+
+                        row = row + "</tr>"
+                        tbody.append(row);
                     });
                 }
             },
