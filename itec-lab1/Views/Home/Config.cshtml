@@ -45,6 +45,7 @@
                 const thcolumn = $('#configTable thead tr');
                 const tdrow = $('#configTable tbody tr');
                 tbody.empty();
+                thcolumn.empty();
                 const propertyNames = Object.keys(data[0]);
 
                 if (data.length === 0) {
@@ -72,6 +73,7 @@
             error: function (xhr, status, error) {
                 console.error('Error fetching data:', error);
                 $('#configTable tbody').html('<tr><td colspan="2">An error occurred.</td></tr>');
+                $('#configTable thead').html('<tr><th colspan="2">Error</th></tr>');
             }
             });
         });
