@@ -1,10 +1,10 @@
 ﻿@{  
     ViewData["Title"] = "Config";  
-    var config = new string[] { "Officer", "Category", "Product" };  
+    var config = new string[] { "Officers", "Categories", "Products" };  
 }  
-<h1>Select Config</h1>  
+<h3>Select Configuration</h3>  
 
-<div class="dropdown">  
+@* <div class="dropdown">  
     <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">  
         Dropdown button  
     </button>  
@@ -23,59 +23,79 @@
         </thead>
         <tbody></tbody>
     </table>
+</div> *@
+
+<div class="btn-group dropdown-light btn-rtl">
+    <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+            data-bs-auto-close="true" aria-expanded="false">
+        Select Configuration <i class="ti ti-circle-arrow-down"></i>
+    </button>
+    <ul class="dropdown-menu" id="configDropdown">
+        @foreach (var type in config)
+        {
+            <li><a class="dropdown-item" data-value="@type" >@type</a></li>
+        }
+    </ul>
+</div>
+
+<div class="app-datatable-default overflow-auto">
+    <table class="display app-data-table default-data-table" id="configTable">
+        <thead>
+        </thead>
+        <tbody></tbody>
+    </table>
 </div>
 
 @section Scripts {
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+
+    <!-- data table js-->
+    <script src="../assets/js/data_table.js"></script>
+
     <script>
 
-        $('#categoryDropdown').on('click', '.dropdown-item', function () {
+        $('#configDropdown').on('click', '.dropdown-item', function () {
             const selectedValue = $(this).data('value');
-
             $("#test").text(selectedValue);
-
-            const path = '/Home/GetAll' + selectedValue + 's'
+            const path = '/Home/GetAll' + selectedValue
 
             $.ajax({
             url: path,
             type: 'GET',
             success: function (data) {
-                console.log(data);
-                const tbody = $('#configTable tbody');
-                const thcolumn = $('#configTable thead tr');
-                const tdrow = $('#configTable tbody tr');
-                tbody.empty();
-                thcolumn.empty();
-                const propertyNames = Object.keys(data[0]);
 
                 if (data.length === 0) {
-                    tbody.append('<tr><td colspan="2">No data found.</td></tr>');
-                } else {
-                    $.each(propertyNames, function (i, propertyName) {
-                        thcolumn.append(`<th>${propertyName}</th>`);
+                    $('#configTable').DataTable({
+                        destroy: true,
+                        data: [],
+                        columns: [{ title: "No data found", data: "No data found" }],
+                        language: {
+                            emptyTable: "No data found."
+                        }
                     });
-
-                    let body = ""
-
-                    $.each(data, function (i, obj) {
-                        // tbody.append(`<tr><td>${obj.id}</td><td>${obj.name}</td></tr>`);
-                        let row = "<tr>"
-
-                        $.each(data[i], function (key, value) {
-                            row = row + `<td>${value}</td>`
-                        });
-
-                        row = row + "</tr>"
-                        tbody.append(row);
-                    });
+                    return;
                 }
+
+                const propertyNames = Object.keys(data[0]);
+
+                const columns = propertyNames.map(function (prop) {
+                    return { title: prop, data: prop };
+                });
+
+                if ($.fn.DataTable.isDataTable('#configTable')) {
+                    $('#configTable').DataTable().clear().destroy();
+                }
+
+                $('#configTable').DataTable({
+                    destroy: true,
+                    data: data,
+                    columns: columns
+                });
             },
-            error: function (xhr, status, error) {
-                console.error('Error fetching data:', error);
-                $('#configTable tbody').html('<tr><td colspan="2">An error occurred.</td></tr>');
-                $('#configTable thead').html('<tr><th colspan="2">Error</th></tr>');
+            error: function () {
+                alert('Failed to fetch data.');
             }
-            });
+        });
         });
 
     </script>

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("itec-lab1")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+aa18ca81393b4b66eb56dabb5acb642c0b0c4a3d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+02c1a24d268927c1b8f4eadfc5cd069c6f3973f8")]
 [assembly: System.Reflection.AssemblyProductAttribute("itec-lab1")]
 [assembly: System.Reflection.AssemblyTitleAttribute("itec-lab1")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

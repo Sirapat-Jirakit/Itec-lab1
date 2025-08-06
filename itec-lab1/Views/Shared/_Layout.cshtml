@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@model itec_lab1.Models.Users
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -20,6 +22,9 @@
 
     <!-- iconoir icon css  -->
     <link href="../assets/vendor/ionio-icon/css/iconoir.css" rel="stylesheet">
+
+    <!-- Data Table css-->
+    <link href="../assets/vendor/datatable/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
 
     <!-- tabler icons-->
     <link href="../assets/vendor/tabler-icons/tabler-icons.css" rel="stylesheet" type="text/css">
@@ -95,6 +100,7 @@
         <main role="main" class="pb-3">
             @RenderBody()
 
+            <!-- Login Modal -->
             <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -103,14 +109,14 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form id="loginForm">
+                            <form id="loginForm" asp-action="Login" asp-controller="Users" method="post">
                                 <div class="mb-3">
-                                    <label for="loginEmail" class="form-label">Email address</label>
-                                    <input type="email" class="form-control" id="loginEmail" required>
+                                    <label for="email" class="form-label">Email address</label>
+                                    <input type="email" class="form-control" name="email" id="email" aria-describedby="emailHelp">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="loginPassword" class="form-label">Password</label>
-                                    <input type="password" class="form-control" id="loginPassword" required>
+                                    <label for="password" class="form-label">Password</label>
+                                    <input type="password" class="form-control" name="password" id="password">
                                 </div>
                                 <div class="text-end">
                                     <button type="submit" class="btn btn-info">Login</button>
@@ -126,6 +132,63 @@
                 </div>
             </div>
 
+            <!-- Register Modal -->
+            <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="registerModalLabel">Register</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form asp-action="Register" asp-controller="Users" method="post">
+                                <div class="mb-3">
+                                    <label asp-for="Name" class="form-label"></label>
+                                    <input asp-for="Name" class="form-control" />
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="Email" class="form-label"></label>
+                                    <input asp-for="Email" class="form-control" />
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="Password" class="form-label"></label>
+                                    <input asp-for="Password" class="form-control" type="password" />
+                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                </div>
+
+                                <input type="hidden" asp-for="CreatedAt" />
+                                <input type="hidden" asp-for="UpdatedAt" />
+                                <input type="hidden" asp-for="IsActive" />
+
+                                <div class="text-end">
+                                    <button type="submit" class="btn btn-success">Register</button>
+                                </div>
+                            </form>
+                            <hr>
+                            <p class="text-center mb-0">
+                                Already have an account?
+                                <a href="#" id="backToLogin">Login here</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Toast Container -->
+            <div class="position-fixed top-0 end-0 p-3" style="z-index: 1100">
+                <div id="loginToast" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            @ViewBag.LoginError
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
 
@@ -135,21 +198,47 @@
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 
     <script>
-        var path = window.location.pathname; // Get current URL path
+        var path = window.location.pathname;
 
         $('.nav-link').each(function () {
         var href = $(this).attr('href');
 
-        // Match if current URL contains the href
         if (path.includes(href)) {
-            $('.nav-link').removeClass('active'); // Remove previous
-            $(this).addClass('active');           // Set current
+            $('.nav-link').removeClass('active');
+            $(this).addClass('active');
         }
+        });
+
+        $(function () {
+            $('#openRegister').on('click', function (e) {
+            e.preventDefault();
+            $('#loginModal').modal('hide');
+            $('#registerModal').modal('show');
+          });
+
+          $('#backToLogin').on('click', function (e) {
+            e.preventDefault();
+            $('#registerModal').modal('hide');
+            $('#loginModal').modal('show');
+          });
+        });
+
+        $(function () {
+            var loginError = "@(ViewBag.LoginError ?? "")";
+            if (loginError.trim() !== "") {
+                var loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+                loginModal.show();
+
+                var toastEl = document.getElementById('loginToast');
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();
+            }
         });
     </script>
 </body>

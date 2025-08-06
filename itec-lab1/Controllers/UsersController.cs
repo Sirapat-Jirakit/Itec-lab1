@@ -37,8 +37,8 @@ namespace itec_lab1.Controllers
 
             if (user == null)
             {
-                ViewBag.Message = "User not found";
-                return View();
+                ViewBag.LoginError = "User not found.";
+                return View("~/Views/Home/Index.cshtml");
             }
 
             var storedPassword = user.Password;
@@ -48,8 +48,8 @@ namespace itec_lab1.Controllers
             }
             else
             {
-                ViewBag.Message = "Invalid password";
-                return View();
+                ViewBag.LoginError = "Invalid password.";
+                return View("~/Views/Home/Index.cshtml");
             }
 
         }
@@ -59,7 +59,8 @@ namespace itec_lab1.Controllers
         {
             if (await _context.Users.AnyAsync(u => u.Email == user.Email))
             {
-                return BadRequest("Username already exists.");
+                ViewBag.LoginError = "Email already exists.";
+                return View("~/Views/Home/Index.cshtml");
             }
 
             user.CreatedAt = DateTime.UtcNow;
@@ -80,7 +81,7 @@ namespace itec_lab1.Controllers
                 user.IsActive
             );
 
-            return RedirectToAction("Login", "Users");
+            return RedirectToAction("Index", "Home");
 
         }
     }

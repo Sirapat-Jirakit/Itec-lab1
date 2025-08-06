@@ -37,7 +37,33 @@ namespace itec_lab1.Controllers
             if (user != null)
                 return Ok(user);
             else
-                return NotFound("User not found");
+                return NotFound("Officers not found");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllCategories()
+        {
+            var user = await _context.Categories
+                .FromSqlRaw("SELECT * FROM categories")
+                .ToListAsync();
+
+            if (user != null)
+                return Ok(user);
+            else
+                return NotFound("Categorise not found");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllProducts()
+        {
+            var user = await _context.Products
+                .FromSqlRaw("SELECT * FROM products")
+                .ToListAsync();
+
+            if (user != null)
+                return Ok(user);
+            else
+                return NotFound("Products not found");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
