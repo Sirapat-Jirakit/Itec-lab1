@@ -5,13 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - itec_lab1</title>
     <script type="importmap"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    @* <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/itec_lab1.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/itec_lab1.styles.css" asp-append-version="true" /> *@
+
+    <!--font-awesome-css-->
+    <link href="../assets/vendor/fontawesome/css/all.css" rel="stylesheet">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+          rel="stylesheet">
+
+    <!-- iconoir icon css  -->
+    <link href="../assets/vendor/ionio-icon/css/iconoir.css" rel="stylesheet">
+
+    <!-- tabler icons-->
+    <link href="../assets/vendor/tabler-icons/tabler-icons.css" rel="stylesheet" type="text/css">
+
+    <!--flag Icon css-->
+    <link href="../assets/vendor/flag-icons-master/flag-icon.css" rel="stylesheet" type="text/css">
+
+    <!-- Bootstrap css-->
+    <link href="../assets/vendor/bootstrap/bootstrap.min.css" rel="stylesheet" type="text/css">
+
+    <!--  prism CSS-->
+    <link href="../assets/vendor/prism/prism.min.css" rel="stylesheet">
+
+    <!-- simplebar css-->
+    <link href="../assets/vendor/simplebar/simplebar.css" rel="stylesheet" type="text/css">
+
+    <!-- App css-->
+    <link href="../assets/css/style.css" rel="stylesheet" type="text/css">
+
+    <!-- Responsive css-->
+    <link href="../assets/css/responsive.css" rel="stylesheet" type="text/css">
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        @* <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container-fluid">
                 <a class="navbar-brand" href="/Home">Home</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -32,11 +65,67 @@
                     </form>
                 </div>
             </div>
-        </nav>
+        </nav> *@
+
+        <div>
+            <ul class="nav nav-tabs tab-primary bg-primary p-1" id="bg" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" href="@Url.Action("Index", "Home")">Home</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" href="@Url.Action("Config", "Home")">Config</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="reviews-tab" data-bs-toggle="tab"
+                            data-bs-target="#reviews-tab-pane" type="button" role="tab" aria-controls="reviews-tab-pane"
+                            aria-selected="false">
+                        <i class="ti ti-star pe-1 ps-1"></i>reviews
+                    </button>
+                </li>
+                <li class="nav-item ms-auto">
+                    <button class="nav-link" type="button" data-bs-toggle="modal" data-bs-target="#loginModal">
+                        <i class="ti ti-login pe-1"></i> Login
+                    </button>
+                </li>
+            </ul>
+        </div>
+
     </header>
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
+
+            <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header bg-info">
+                            <h5 class="modal-title text-white" id="loginModalLabel">Login</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="loginForm">
+                                <div class="mb-3">
+                                    <label for="loginEmail" class="form-label">Email address</label>
+                                    <input type="email" class="form-control" id="loginEmail" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="loginPassword" class="form-label">Password</label>
+                                    <input type="password" class="form-control" id="loginPassword" required>
+                                </div>
+                                <div class="text-end">
+                                    <button type="submit" class="btn btn-info">Login</button>
+                                </div>
+                            </form>
+                            <hr>
+                            <p class="text-center mb-0">
+                                Don't have an account?
+                                <a href="#" id="openRegister">Register here</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </main>
     </div>
 
@@ -49,5 +138,19 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        var path = window.location.pathname; // Get current URL path
+
+        $('.nav-link').each(function () {
+        var href = $(this).attr('href');
+
+        // Match if current URL contains the href
+        if (path.includes(href)) {
+            $('.nav-link').removeClass('active'); // Remove previous
+            $(this).addClass('active');           // Set current
+        }
+        });
+    </script>
 </body>
 </html>
